@@ -1,4 +1,4 @@
-from maya import cmds
+from maya import cmds, mel
 import os
 import pprint
 import math
@@ -133,11 +133,23 @@ def build_maya_scene(_path=None, _fbx=None, root=None):
     plane = cmds.polyPlane(n='_ground_plane', cuv=1, h=10000, w=10000, sh=100, sw=100)
     cmds.hyperShade(a=shader)
     
+    # Get min and max frames
+    cmds.select(selected[0], r=True)
+    cmds.select(hi=True)
+    mel.eval('setPlaybackRangeToMinMax;')
+
     # Save the file
     base_name = os.path.splitext(fbx_filename)[0]
     scene_name = '%s_fbx_playblast' % base_name
+    scene_name = os.path.join(_path, scene_name)
     cmds.file(rename=scene_name)
     cmds.file(save=True, type='mayaAscii')
+
+    # Create a playblast
+    # TODO: Check for MOV install and possibly load the plugin
+
+    save_data = cmds.playblast(format='qt', filename=scene_name, sqt=0, cc=True, v=True, os=True, fp=4, p=100, qlt=80, h=1080, w=1920)
+    print(save_data)
 
 
 if __name__ == '__main__':
