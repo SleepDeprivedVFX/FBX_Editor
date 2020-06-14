@@ -21,8 +21,12 @@ def build_camera(bb=None, cam_height=None, res_w=1920, res_h=1080):
         cam_height = scene_bb[4] - scene_bb[1]
     # Create a new camera and fit it to the current view
     cam = cmds.camera(n='pb_follow_cam')
+    active_panel = cmds.getPanel(wf=True)
     cmds.lookThru(cam)
     cmds.viewFit()
+    cmds.modelEditor(active_panel, e=True, displayTextures=True)
+    cmds.modelEditor(active_panel, e=True, udm=False)
+    
     # Get the position of the new camera after placement
     cam_pos = cmds.xform(q=True, ws=True, t=True)
     # Separate out the mins and maxs of the bounding box for triangulation
@@ -115,6 +119,7 @@ def build_maya_scene(_path=None, _fbx=None, root=None):
     cam_data = build_camera(bb=bb)
     print('Cam Data: %s' % cam_data)
     camera_grp = cam_data[4]
+    cmds.pointConstraint(selected[0], camera_grp, mo=True, skip='y', w=1)
 
     shader = cmds.shadingNode('blinn', asShader=True, n='_ground_checker_mat')
     checker = cmds.shadingNode('checker', asTexture=True, n='_checkerboard')
