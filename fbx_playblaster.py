@@ -72,6 +72,7 @@ def build_camera(bb=None, cam_height=None, res_w=1920, res_h=1080):
     cmds.setAttr('%s.rx' % cam[0], cam_angle)
     # Group the camera, center the pivot, and animate the rotation
 
+    cmds.group(n='_playblast_cam')
     cameras = cmds.listCameras(p=True, o=True)
     for camera in cameras:
         if camera == cam[0]:
