@@ -132,6 +132,12 @@ def build_maya_scene(_path=None, _fbx=None, root=None):
     cmds.setAttr('%s.transparency' % shader, 0.85, 0.85, 0.85)
     plane = cmds.polyPlane(n='_ground_plane', cuv=1, h=10000, w=10000, sh=100, sw=100)
     cmds.hyperShade(a=shader)
+    
+    # Save the file
+    base_name = os.path.splitext(fbx_filename)[0]
+    scene_name = '%s_fbx_playblast' % base_name
+    cmds.file(rename=scene_name)
+    cmds.file(save=True, type='mayaAscii')
 
 
 if __name__ == '__main__':
