@@ -1,7 +1,9 @@
 from maya import cmds, mel
+# import maya.standalone
 import os
 import pprint
 import math
+import sys
 
 
 def build_camera(bb=None, cam_height=None, res_w=1920, res_h=1080):
@@ -26,7 +28,7 @@ def build_camera(bb=None, cam_height=None, res_w=1920, res_h=1080):
     cmds.viewFit()
     cmds.modelEditor(active_panel, e=True, displayTextures=True)
     cmds.modelEditor(active_panel, e=True, udm=False)
-    
+
     # Get the position of the new camera after placement
     cam_pos = cmds.xform(q=True, ws=True, t=True)
     # Separate out the mins and maxs of the bounding box for triangulation
@@ -96,7 +98,7 @@ def build_maya_scene(_path=None, _fbx=None, root=None):
     :param _path: The folder path to the FBX file
     :param _fbx: The name of the FBX file
     :param root: The root joint of the character
-    :return: 
+    :return:
     """
     new_file = cmds.file(new=True, f=True)
     fbx_filepath = _path
@@ -132,11 +134,14 @@ def build_maya_scene(_path=None, _fbx=None, root=None):
     cmds.setAttr('%s.transparency' % shader, 0.85, 0.85, 0.85)
     plane = cmds.polyPlane(n='_ground_plane', cuv=1, h=10000, w=10000, sh=100, sw=100)
     cmds.hyperShade(a=shader)
-    
+
     # Get min and max frames
     cmds.select(selected[0], r=True)
     cmds.select(hi=True)
     mel.eval('setPlaybackRangeToMinMax;')
+
+    mel.eval('setSceneTimecodeVisibility(true);')
+    mel.eval('setCurrentFrameVisibility(true);')
 
     # Save the file
     base_name = os.path.splitext(fbx_filename)[0]
@@ -148,11 +153,42 @@ def build_maya_scene(_path=None, _fbx=None, root=None):
     # Create a playblast
     # TODO: Check for MOV install and possibly load the plugin
 
-    save_data = cmds.playblast(format='qt', filename=scene_name, sqt=0, cc=True, v=True, os=True, fp=4, p=100, qlt=80, h=1080, w=1920)
+    save_data = cmds.playblast(format='qt', filename=scene_name, sqt=0, cc=True, v=True, os=True, fp=4, p=100, qlt=80,
+                               h=1080, w=1920)
     print(save_data)
 
 
+def fbx_to_playblast():
+    if len(sys.argv) > 1:
+        full_path = sys.argv[1]
+        joint_name = sys.argv[2]
+        root_path = os.path.dirname(full_path)
+        file_name = os.path.basename(full_path)
+        build_maya_scene(_path=root_path, _fbx=file_name, root=joint_name)
+    else:
+        return False
+
+
+def batch_process_fbx_playblasts(_path=None, _root=None):
+    if _path and _root:
+        if os.path.exists(_path):
+            collect = os.walk(_path)
+            for roots, dirs, files in collect:
+                if files:
+                    for f in files:
+                        if f.endswith('.fbx'):
+                            print('Building Playblast...', f)
+                            build_maya_scene(_path=roots, _fbx=f, root=_root)
+
+
 if __name__ == '__main__':
-    build_maya_scene(_path='C:/Users/sleep/OneDrive/Documents/Scripts/Python/Utilities/FBX_Editor/raw_data/',
-                     _fbx='Run_Adam_001_006_Adam_Sneakers.fbx', root='Reference')
+    start_path = 'C:/Users/cosav/Documents/rxports'
+    root = 'Reference'
+    batch_process_fbx_playblasts(_path=start_path, _root=root)
+
+#     # build_maya_scene(_path='C:/Users/sleep/OneDrive/Documents/Scripts/Python/Utilities/FBX_Editor/raw_data/Run_Adam_001_006_Adam_Sneakers.fbx', root='Reference')
+#     fbx_to_playblast()
+
+# Command Line setup
+# command = 'python("C:/Users/sleep/OneDrive/Documents/Scripts/Python/Utilities/FBX_Editor/fbx_playblaster.py")'
 
