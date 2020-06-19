@@ -1,10 +1,33 @@
+import maya.standalone
+maya.standalone.initialize(name='python')
 from maya import cmds, mel
-# import maya.standalone
 import os
 import pprint
 import math
 import sys
 
+# Import the maya plugins
+cmds.loadPlugin("C:/Program Files/Autodesk/Maya2019/plug-ins/fbx/plug-ins/fbxmaya.mll")
+
+
+def solo_renderable(solo_cam):
+    # Disable all cameras as renderable
+    # and store the original states
+    cams = cmds.ls(type='camera')
+    states = {}
+    for cam in cams:
+        states[cam] = cmds.getAttr(cam + '.rnd')
+        cmds.setAttr(cam + '.rnd', 0)
+
+    # Change the solo cam to renderable
+    cmds.setAttr(solo_cam + '.rnd', 1)
+
+    try:
+        yield
+    finally:
+        # Revert to original state
+        for cam, state in states.items():
+            cmds.setAttr(cam + '.rnd', state)
 
 def build_camera(bb=None, cam_height=None, res_w=1920, res_h=1080):
     # Get the set/scene size from the bounding box
@@ -23,9 +46,11 @@ def build_camera(bb=None, cam_height=None, res_w=1920, res_h=1080):
         cam_height = scene_bb[4] - scene_bb[1]
     # Create a new camera and fit it to the current view
     cam = cmds.camera(n='pb_follow_cam')
+    # Set the renderable camera
+    solo_renderable(cam[0])
     active_panel = cmds.getPanel(wf=True)
-    cmds.lookThru(cam)
-    cmds.viewFit()
+    # cmds.lookThru(cam)
+    # cmds.viewFit()
     cmds.modelEditor(active_panel, e=True, displayTextures=True)
     cmds.modelEditor(active_panel, e=True, udm=False)
 
@@ -182,7 +207,7 @@ def batch_process_fbx_playblasts(_path=None, _root=None):
 
 
 if __name__ == '__main__':
-    start_path = 'C:/Users/cosav/Documents/rxports'
+    start_path = 'D:/mocap_shoots/TLR/06122020/TLR100_011_010/test_delete_me'
     root = 'Reference'
     batch_process_fbx_playblasts(_path=start_path, _root=root)
 
