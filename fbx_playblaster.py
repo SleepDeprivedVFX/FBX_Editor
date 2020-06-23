@@ -158,7 +158,10 @@ def build_maya_scene(_path=None, _fbx=None, root=None):
     cmds.connectAttr('%s.outColor' % checker, '%s.color' % shader)
     cmds.setAttr('%s.transparency' % shader, 0.85, 0.85, 0.85)
     plane = cmds.polyPlane(n='_ground_plane', cuv=1, h=10000, w=10000, sh=100, sw=100)
-    cmds.hyperShade(a=shader)
+    geo = cmds.ls(type='mesh')
+    # cmds.hyperShade(a=shader)
+    shading_group = 'initialShadingGroup'
+    cmds.sets(geo, e=True, forceElement=shading_group)
 
     # Get min and max frames
     cmds.select(selected[0], r=True)
@@ -207,7 +210,7 @@ def batch_process_fbx_playblasts(_path=None, _root=None):
 
 
 if __name__ == '__main__':
-    start_path = 'D:/mocap_shoots/TLR/06122020/TLR100_011_010/test_delete_me'
+    start_path = 'C:/Users/cosav/Documents/scripts/FBX_Editor/BuildingBlocks/test_fbx'
     root = 'Reference'
     batch_process_fbx_playblasts(_path=start_path, _root=root)
 
