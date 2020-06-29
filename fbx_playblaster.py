@@ -94,35 +94,58 @@ def build_camera(bb=None, cam_height=None, res_w=1920, res_h=1080):
 
 def build_maya_scene(_path=None, _fbx=None, root=None):
     """
-    This method builds out the Maya scene from an FBX file
+    This method builds out the Maya scene from an FBX file.  It creates an empty Maya scene, imports the FBX into
+    the new scene and creates a camera that follows the mocap data.  A checkered floor with some transparency is
+    also created to help understand the movement and contact points for the feet.
     :param _path: The folder path to the FBX file
     :param _fbx: The name of the FBX file
     :param root: The root joint of the character
     :return: 
     """
-    new_file = cmds.file(new=True, f=True)
+    # Create a clean Maya file
+    cmds.file(new=True, f=True)
+
+    # Take in the folder path, the fbx filename and the root joint name (usually "Reference" or "Hips" for mocap.
     fbx_filepath = _path
     fbx_filename = _fbx
     fbx_file = os.path.join(fbx_filepath, fbx_filename)
+
+    # Import the FBX into the Maya scene
     fbx = cmds.file(fbx_file, i=True, applyTo=':')
-    cmds.select(root, r=True)
+
+    # Select the skeleton root
+    try:
+        cmds.select(root, r=True)
+    except ValueError as e:
+        # The root selection can't be found.
+        print('Shit hit the fan.  Can\'t find %s in the scene: %s' % (root, e))
+        return False
     selected = cmds.ls(sl=True)
     if selected:
-        print('Shit:', selected)
+        # The FBX skeleton is found and selected!
+        # Get the Bounding Box information
         bb = cmds.xform(bb=True, q=True)
         print('Bounding Box: %s' % bb)
     else:
-        print('DAMN!!!!', selected)
+        print('Object not selected, set a default.  This should never work.', selected)
         bb = [-1.0, 0.0, -1.0, 1.0, 1.0, 1.0]
+
+    # Set Bounding Box Absolute length
     bb_x = abs(bb[0]) + abs(bb[3])
     bb_y = abs(bb[1]) + abs(bb[4])
     bb_z = abs(bb[2]) + abs(bb[5])
 
+    # Run the build_camera routine on the bounding boxes.
     cam_data = build_camera(bb=bb)
     print('Cam Data: %s' % cam_data)
+
+    # Get the group camera data
     camera_grp = cam_data[4]
+
+    # Point constrain the camera to both the X and Z axis so that Y axis translations are not taken into account.
     cmds.pointConstraint(selected[0], camera_grp, mo=True, skip='y', w=1)
 
+    # Build a check 
     shader = cmds.shadingNode('blinn', asShader=True, n='_ground_checker_mat')
     checker = cmds.shadingNode('checker', asTexture=True, n='_checkerboard')
     placement = cmds.shadingNode('place2dTexture', asUtility=True, n='_checker_placement')
@@ -168,6 +191,7 @@ def fbx_to_playblast():
     else:
         return False
 
+
 def batch_process_fbx_playblasts(_path=None, _root=None):
     if _path and _root:
         if os.path.exists(_path):
@@ -184,7 +208,8 @@ if __name__ == '__main__':
     start_path = 'C:/Users/sleep/OneDrive/Documents/Scripts/Python/Utilities/FBX_Editor/'
     root = 'Reference'
     batch_process_fbx_playblasts(_path=start_path, _root=root)
-    
+
+
 #     # build_maya_scene(_path='C:/Users/sleep/OneDrive/Documents/Scripts/Python/Utilities/FBX_Editor/raw_data/Run_Adam_001_006_Adam_Sneakers.fbx', root='Reference')
 #     fbx_to_playblast()
 
