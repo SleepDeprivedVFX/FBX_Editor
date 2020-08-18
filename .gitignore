@@ -1,0 +1,8 @@
+/test_resources/
+/logs/
+/raw_data/
+/.idea/
+*.fbx
+*.ma
+*.mb
+

@@ -1,3 +1,10 @@
+"""
+Devils Rotoscope
+Motion Capture Processing Toolkit
+"""
+__author__ = 'Adam Benson'
+__version__ = '0.1.0'
+
 # from maya import cmds
 import pprint
 import os
@@ -5,9 +12,24 @@ import sys
 import re
 import glob
 import subprocess
+import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
-import ConfigParser
+from PySide2 import QtWidgets, QtCore, QtGui
+from ui import ui_devilsRoto_ui as dr
+
+# Import tool bin
+# from bin import fbx_playblaster as fbx_pb
+# from bin import fbx_editor as fbx_ed
+
+# Check the python version and import appropriately
+try:
+    if sys.version_info[0] >= 3:
+        import configparser as ConfigParser
+    else:
+        import ConfigParser
+except Exception as e:
+    print('ConfigParser failed: %s' % e)
 
 # -----------------------------------------------------------------------------------------------------
 # Build Configuration
@@ -48,145 +70,462 @@ logger.addHandler(fh)
 
 logger.info('Devil\'s Rotoscope Mocap Editor has started!')
 
+logger.info('Setting default Mocap settings...')
+default_root_name = config.get('Mocap', 'default_root_name')
 
-class devils_roto(object):
+#
+# class devils_roto(object):
+#     """
+#     This is the main engine for the Mocap Pipeline system.  It contains the following tools:
+#     export_edit: This tool trims and FBX file and puts it into proper project folder
+#     get_batch: Tries to find the mayabatch command
+#     """
+#     def __init__(self, parent=None):
+#         # Get configuration parameters
+#         self.mayabatch = config.get('Maya', 'batch_path')
+#         self.mayapy = config.get('Maya', 'mayapy_path')
+#         # Check for the existence of MayaBatch.exe by running get_batch()
+#         if not self.get_batch():
+#             no_batch_msg = 'Can\'t find Maya Batch.  Aborting.'
+#             logger.error(no_batch_msg)
+#             raise Exception(no_batch_msg)
+#         if not self.get_mayapy():
+#             no_mayapy_msg = 'Can\'t find MayaPy.  Aborting.'
+#             logger.error(no_mayapy_msg)
+#             raise Exception(no_mayapy_msg)
+#
+#     def get_batch(self):
+#         '''
+#         This routine checks for the existence of the mayaBatch.exe.  If the one in the config file can't be found, it
+#         will try to find it from common paths.
+#         :return:  True if the the mayaBatch is good.  False if no mayabatch.exe can be found.
+#         '''
+#
+#         # Check mayabatch.exe's existence
+#         mb_exists = os.path.exists(self.mayabatch)
+#         if mb_exists:
+#             logger.info('MayaBatch is connected.')
+#             return True
+#         else:
+#             # Set OS platform variables.
+#             logger.info('MayaBatch was not found where the config file said it would be.  Searching...')
+#             if sys.platform == 'win32':
+#                 batch_pattern = r'C:/Program Files/Autodesk/Maya\d+/bin/mayabatch.exe'
+#                 app_path = os.walk('C:/Program Files/Autodesk')
+#             elif sys.platform == 'darwin':
+#                 batch_pattern = r'/Applications/Autodesk/maya\d+/Maya.app/Contents/bin/mayabatch'
+#                 app_path = os.walk('/Applications/Autodesk')
+#             else:
+#                 batch_pattern = r'/usr/autodesk/maya\d+-x64/bin/mayabatch'
+#                 app_path = os.walk('/usr/autodesk')
+#
+#             # Check through the paths for a possible match
+#             found_paths = []
+#             for root, dirs, files in app_path:
+#                 for f in files:
+#                     search_path = os.path.join(root, f).replace('\\', '/')
+#                     find = re.findall(batch_pattern.lower(), search_path.lower())
+#                     if find:
+#                         # A Maya Batch file was found!
+#                         logger.info('MayaBatch found!')
+#                         found_paths.append(find[0])
+#                         break
+#
+#             if found_paths:
+#                 # Get the latest version of MayaBatch.
+#                 found_paths = sorted(found_paths, reverse=True)
+#                 new_path = found_paths[0]
+#
+#                 # Set the Maya batch path and update the config file
+#                 self.mayabatch = new_path
+#                 if os.path.exists(self.mayabatch):
+#                     # TODO: Setup the config write feature
+#                     self.write_configuration(batch_path=self.mayabatch)
+#                     # config.set('Maya', 'batch_path', new_path)
+#                     # with open(config_path, 'w') as w_config:
+#                     #     # w_config.write(config)
+#                     #     print(config.get('Maya', 'batch_path'))
+#                     logger.info('MayaBatch is now connected.')
+#                     return True
+#             logger.error('Could not find the MayaBatch file!')
+#             return False
+#
+#     def get_mayapy(self):
+#         '''
+#         This routine checks for the existence of the mayaBatch.exe.  If the one in the config file can't be found, it
+#         will try to find it from common paths.
+#         :return:  True if the the mayaBatch is good.  False if no mayabatch.exe can be found.
+#         '''
+#
+#         # Check mayabatch.exe's existence
+#         mpy_exists = os.path.exists(self.mayapy)
+#         if mpy_exists:
+#             logger.info('MayaPy is connected.')
+#             return True
+#         else:
+#             # Set OS platform variables.
+#             logger.info('MayaPy was not found where the config file said it would be.  Searching...')
+#             if sys.platform == 'win32':
+#                 py_pattern = r'C:/Program Files/Autodesk/Maya\d+/bin/mayapy.exe'
+#                 app_path = os.walk('C:/Program Files/Autodesk')
+#             elif sys.platform == 'darwin':
+#                 py_pattern = r'/Applications/Autodesk/Maya\d+/Maya.app/Contents/bin/mayapy.exe'
+#                 app_path = os.walk('/Applications/Autodesk')
+#             else:
+#                 py_pattern = r'/usr/autodesk/maya\d+-x64/bin/mayapy'
+#                 app_path = os.walk('/usr/autodesk')
+#
+#             # Check through the paths for a possible match
+#             found_paths = []
+#             found_py_paths = []
+#             for root, dirs, files in app_path:
+#                 for f in files:
+#                     search_path = os.path.join(root, f).replace('\\', '/')
+#                     find_py = re.findall(py_pattern.lower(), search_path.lower())
+#                     t = False
+#                     if find_py:
+#                         # A Maya Py file was found!
+#                         logger.info('MayaPy found!')
+#                         found_py_paths.append(find_py[0])
+#                         break
+#
+#             if found_py_paths:
+#                 # Get the latest version of MayaPy
+#                 found_py_paths = sorted(found_py_paths, reverse=True)
+#                 new_py_path = found_py_paths[0]
+#
+#                 # Set the Maya py path and update the config file
+#                 self.mayapy = new_py_path
+#                 if os.path.exists(self.mayapy):
+#                     # TODO: Setup the config write feature
+#                     self.write_configuration(mayapy_path=self.mayapy)
+#                     # config.set('Maya', 'batch_path', new_path)
+#                     # with open(config_path, 'w') as w_config:
+#                     #     # w_config.write(config)
+#                     #     print(config.get('Maya', 'batch_path'))
+#                     logger.info('MayaPy is now connected.')
+#                     return True
+#             logger.error('Could not find the MayaPy file!')
+#             return False
+#
+#     def write_configuration(self, batch_path=None, mayapy_path=None):
+#         # TODO: Eventually this will write out new configuration settings if needed.
+#         pass
+#
+#     def get_path_from_context(self, data=None):
+#         # TODO: This routine needs to take minor information and get the relative path for a shot or asset.  For now
+#         #       it will simply return the data given to it
+#         output_path = None
+#         if data:
+#             output_path = data
+#         return output_path
+#
+#     def get_first_frame(self):
+#         objs = cmds.ls(selection=True)
+#         for obj in objs:
+#
+#             animAttributes = cmds.listAnimatable(obj);
+#
+#             first_keyframe = 999999999
+#
+#             for attribute in animAttributes:
+#
+#                 numKeyframes = cmds.keyframe(attribute, query=True,
+#                                              keyframeCount=True)
+#
+#                 if (numKeyframes > 0):
+#                     times = cmds.keyframe(attribute, query=True,
+#                                           index=(0, numKeyframes), timeChange=True)
+#
+#                     for i in range(0, numKeyframes):
+#                         if times[i] < first_keyframe:
+#                             first_keyframe = times[i]
+#                         else:
+#                             continue
+#         print('First Keyframe: %s' % first_keyframe)
+#
+#     def export_edit(self, start_time=None, end_time=None, original_fbx=None, edit_name=None, destination=None):
+#         logger.debug('original_fbx type: %s' % type(original_fbx))
+#         logger.debug('start_time type: %s' % type(start_time))
+#         logger.debug('end_time type: %s' % type(end_time))
+#
+#         # Test if the call is valid
+#         if original_fbx and type(original_fbx) == str:
+#             # Cleanup the path separators
+#             original_fbx = original_fbx.replace('\\', '/')
+#             # Test for the files existence.
+#             if os.path.exists(original_fbx):
+#                 # Setup inputs
+#                 logger.debug('Path exists: %s' % original_fbx)
+#                 orig_path = os.path.dirname(original_fbx)
+#                 orig_file = os.path.basename(original_fbx)
+#                 # Check for bad characters and replace them with underscores
+#                 if '-' in orig_file:
+#                     orig_file = orig_file.replace('-', '_')
+#                 if ' ' in orig_file:
+#                     orig_file = orig_file.replace(' ', '_')
+#                 # Set the file name
+#                 name = os.path.splitext(orig_file)[0]
+#
+#                 # Build Destination output
+#                 if not destination:
+#                     # Default same folder export
+#                     destination = os.path.join(orig_path, 'output')
+#                 # Build any non-existent folder structures
+#                 if not os.path.exists(destination):
+#                     os.makedirs(destination)
+#
+#                 # The edit name is the name of the output FBX file.  If it is not supplied, then '_edited' is appended
+#                 if edit_name:
+#                     output_file = '%s.fbx' % edit_name
+#                 else:
+#                     output_file = '%s_edited.fbx' % name
+#                 # Create the output file path
+#                 output = os.path.join(destination, output_file)
+#
+#                 # Check frame range number and start processing.
+#                 if type(start_time) in [float, int] and type(end_time) in [float, int]:
+#                     logger.debug('The frame numbers are valid.')
+#                     if start_time and end_time:
+#                         pprint.pprint('exporting....')
+#                         original_fbx = original_fbx.replace('\\', '/')
+#                         output = output.replace('\\', '/')
+#                         # TODO: This needs to move the new animation to frame 1001... somehow.
+#                         command = 'file -import -type \\"FBX\\" -ignoreVersion -ra true -mergeNamespacesOnClash false ' \
+#                                   '-rpr \\"%s\\" -options \\"fbx\\" -pr -importFrameRate true -importTimeRange ' \
+#                                   '"override" \\"%s\\";playbackOptions -min %f -max %f;' \
+#                                   'FBXExportSplitAnimationIntoTakes -v \\"%s\\" %f %f;FBXExport -f \\"%s\\";' % \
+#                                   (name, original_fbx, start_time, end_time, edit_name, start_time, end_time, output)
+#                         result = subprocess.call('%s -command "%s"' % (self.mayabatch, command))
+#                         print('RESULT: %s' % result)
+#
+#             else:
+#                 pprint.pprint('The FBX is non-existent.')
+#         else:
+#             pprint.pprint('The FBX is non-existent or is the wrong file type.')
+
+
+class devils_roto_ui(QtWidgets.QWidget):
     """
-    This is the main engine for the Mocap Pipeline system.  It contains the following tools:
-    export_edit: This tool trims and FBX file and puts it into proper project folder
-    get_batch: Tries to find the mayabatch command
+    The main Time Lord UI.
     """
     def __init__(self, parent=None):
-        # Get configuration parameters
-        self.mayabatch = config.get('Maya', 'batch_path')
-        # Check for the existence of MayaBatch.exe by running get_batch()
-        if not self.get_batch():
-            no_batch_msg = 'Can\'t find Maya Batch.  Aborting.'
-            logger.error(no_batch_msg)
-            raise Exception(no_batch_msg)
+        QtWidgets.QWidget.__init__(self, parent)
 
-    def get_batch(self):
-        '''
-        This routine checks for the existence of the mayaBatch.exe.  If the one in the config file can't be found, it
-        will try to find it from common paths.
-        :return:  True if the the mayaBatch is good.  False if no mayabatch.exe can be found.
-        '''
+        # --------------------------------------------------------------------------------------------------------
+        # Set the saved settings
+        # --------------------------------------------------------------------------------------------------------
+        # This saves all the last settings so that they return to their previous state when the program is run again.
+        self.settings = QtCore.QSettings(__author__, 'DevilsRoto')
+        self.saved_pb_proc_batch = self.settings.value('pb_proc_batch', '.')
+        self.saved_pb_proc_file = self.settings.value('pb_proc_file', '.')
+        self.saved_pb_path = self.settings.value('pb_path', '.')
+        self.saved_pb_origin_angle = self.settings.value('pb_origin_angle', '.')
+        self.saved_ex_proc_batch = self.settings.value('ex_proc_batch', '.')
+        self.saved_ex_proc_file = self.settings.value('ex_proc_file', '.')
+        self.saved_ex_path = self.settings.value('ex_path', '.')
+        self.saved_tab = self.settings.value('tabs', '0')
+        self.saved_window_position = self.settings.value('geometry')
+        self.restoreGeometry(self.saved_window_position)
 
-        # Check mayabatch.exe's existence
-        mb_exists = os.path.exists(self.mayabatch)
-        if mb_exists:
-            logger.info('MayaBatch is connected.')
-            return True
+        # --------------------------------------------------------------------------------------------------------
+        # Setup UI
+        # --------------------------------------------------------------------------------------------------------
+        self.ui = dr.Ui_DevilsRotoscope()
+        self.ui.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon('icons/dr_icon.png'))
+        self.setWindowTitle("Devil's Rotoscope v%s" % __version__)
+        # self.set_window_on_top()
+        self.ui.pb_cancel_btn.clicked.connect(self.close)
+        self.ui.ex_cancel_btn.clicked.connect(self.close)
+        self.ui.cfg_cancel_btn.clicked.connect(self.close)
+        self.ui.pb_browse_btn.clicked.connect(lambda: self.get_folder_file(field=self.ui.pb_folder_file,
+                                                                           type=self.ui.pb_batch_btn.isChecked(),
+                                                                           ext='FBX(*.fbx)'))
+        self.ui.ex_browse_btn.clicked.connect(lambda: self.get_folder_file(field=self.ui.ex_folder_file,
+                                                                           type=self.ui.ex_batch_btn.isChecked(),
+                                                                           ext='FBX(*.fbx)'))
+        self.ui.cfg_mayabatch_btn.clicked.connect(lambda: self.get_folder_file(field=self.ui.cfg_maya_batch_path,
+                                                                               type=False, ext='EXE(*.exe)'))
+        self.ui.cfg_mayapy_btn.clicked.connect(lambda: self.get_folder_file(field=self.ui.cfg_mayapy_path,
+                                                                            type=False, ext='EXE(*.exe)'))
+        self.ui.cfg_maya_batch_path.setText(config.get('Maya', 'batch_path'))
+        self.ui.cfg_mayapy_path.setText(config.get('Maya', 'mayapy_path'))
+        if config.get('Logging', 'debug_logging') == 'True':
+            self.ui.cfg_debug_logging.setChecked(True)
         else:
-            # Set OS platform variables.
-            logger.info('MayaBatch was not found where the config file said it would be.  Searching...')
-            if sys.platform == 'win32':
-                pattern = r'C:/Program Files/Autodesk/Maya\d+/bin/mayabatch.exe'
-                app_path = os.walk('C:/Program Files/Autodesk')
-            elif sys.platform == 'darwin':
-                pattern = r'/Applications/Autodesk/maya\d+/Maya.app/Contents/bin/mayabatch'
-                app_path = os.walk('/Applications/Autodesk')
-            else:
-                pattern = r'/usr/autodesk/maya\d+-x64/bin/mayabatch'
-                app_path = os.walk('/usr/autodesk')
+            self.ui.cfg_debug_logging.setChecked(False)
+        self.ui.cfg_num_days_logging.setValue(int(config.get('Logging', 'log_days')))
+        self.ui.cfg_default_root.setText(config.get('Mocap', 'default_root_name'))
 
-            # Check through the paths for a possible match
-            found_paths = []
-            for root, dirs, files in app_path:
-                for f in files:
-                    search_path = os.path.join(root, f).replace('\\', '/')
-                    find = re.findall(pattern.lower(), search_path.lower())
-                    if find:
-                        # A Maya Batch file was found!
-                        logger.info('MayaBatch found!')
-                        found_paths.append(find[0])
-                        break
-            if found_paths:
-                # Get the latest version of MayaBatch.
-                found_paths = sorted(found_paths, reverse=True)
-                new_path = found_paths[0]
+        # Setup button connections
+        self.ui.pb_run_btn.clicked.connect(self.run_playblast)
+        self.ui.pb_queue_btn.clicked.connect(lambda: self.load_queue(path_obj=self.ui.pb_folder_file,
+                                                                     batch=self.ui.pb_batch_btn.isChecked()))
 
-                # Set the Maya batch path and update the config file
-                self.mayabatch = new_path
-                if os.path.exists(self.mayabatch):
-                    # TODO: Setup the config write feature
-                    self.write_configuration(batch_path=self.mayabatch)
-                    # config.set('Maya', 'batch_path', new_path)
-                    # with open(config_path, 'w') as w_config:
-                    #     # w_config.write(config)
-                    #     print(config.get('Maya', 'batch_path'))
-                    logger.info('MayaBatch is now connected.')
-                    return True
-            logger.error('Could not find the MayaBatch file!')
-            return False
+        # ---------------------------------------------------------------------------------------------------------
+        # Set the default values from saved settings
+        # ---------------------------------------------------------------------------------------------------------
+        if self.saved_pb_proc_batch == 'true' or self.saved_pb_proc_batch == True:
+            self.saved_pb_proc_batch = True
+        else:
+            self.saved_pb_proc_batch = False
+        if self.saved_pb_proc_file == 'true' or self.saved_pb_proc_file == True:
+            self.saved_pb_proc_file = True
+        else:
+            self.saved_pb_proc_file = False
+        if self.saved_ex_proc_batch == 'true' or self.saved_ex_proc_batch == True:
+            self.saved_ex_proc_batch = True
+        else:
+            self.saved_ex_proc_batch = False
+        if self.saved_ex_proc_file == 'true' or self.saved_ex_proc_file == True:
+            self.saved_ex_proc_file = True
+        else:
+            self.saved_ex_proc_file = False
+        if not self.saved_tab:
+            self.saved_tab = 0
+        self.ui.pb_batch_btn.setChecked(self.saved_pb_proc_batch)
+        self.ui.pb_file_btn.setChecked(self.saved_pb_proc_file)
+        self.ui.pb_folder_file.setText(self.saved_pb_path)
+        if self.saved_pb_origin_angle:
+            self.ui.pb_origin_angle.setValue(float(self.saved_pb_origin_angle))
+        self.ui.ex_batch_btn.setChecked(self.saved_ex_proc_batch)
+        self.ui.ex_file_btn.setChecked(self.saved_ex_proc_file)
+        self.ui.ex_folder_file.setText(self.saved_ex_path)
+        self.ui.toolboxes.setCurrentIndex(int(self.saved_tab))
 
-    def write_configuration(self, batch_path=None):
-        # TODO: Eventually this will write out new configuration settings if needed.
-        pass
+        # SETUP ENGINE
+        # self.devils_roto = devils_roto()
 
-    def export_edit(self, start_time=None, end_time=None, original_fbx=None, edit_name=None, destination=None):
-        logger.debug('original_fbx type: %s' % type(original_fbx))
-        logger.debug('start_time type: %s' % type(start_time))
-        logger.debug('end_time type: %s' % type(end_time))
-
-        # Test if the call is valid
-        if original_fbx and type(original_fbx) == str:
-            # Cleanup the path separators
-            original_fbx = original_fbx.replace('\\', '/')
-            # Test for the files existence.
-            if os.path.exists(original_fbx):
-                # Setup inputs
-                logger.debug('Path exists: %s' % original_fbx)
-                orig_path = os.path.dirname(original_fbx)
-                orig_file = os.path.basename(original_fbx)
-                # Check for bad characters and replace them with underscores
-                if '-' in orig_file:
-                    orig_file = orig_file.replace('-', '_')
-                if ' ' in orig_file:
-                    orig_file = orig_file.replace(' ', '_')
-                # Set the file name
-                name = os.path.splitext(orig_file)[0]
-
-                # Build Destination output
-                if not destination:
-                    # Default same folder export
-                    destination = os.path.join(orig_path, 'output')
-                # Build any non-existent folder structures
-                if not os.path.exists(destination):
-                    os.makedirs(destination)
-
-                # The edit name is the name of the output FBX file.  If it is not supplied, then '_edited' is appended
-                if edit_name:
-                    output_file = '%s.fbx' % edit_name
+    def load_queue(self, path_obj=None, batch=True):
+        """
+        This will load the queue from either a folder or a file, depending on the batch or file settings and the
+        existence of an actual file or folder.
+        :return:
+        """
+        fbx_files = []
+        if path_obj:
+            path = path_obj.text()
+            if os.path.exists(path):
+                if batch:
+                    all_files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+                    for f in all_files:
+                        if f.endswith('.fbx'):
+                            fbx_files.append(os.path.join(path, f))
                 else:
-                    output_file = '%s_edited.fbx' % name
-                # Create the output file path
-                output = os.path.join(destination, output_file)
+                    if path.endswith('.fbx'):
+                        fbx_files.append(path)
+            print('fbx_files: %s' % fbx_files)
+            if fbx_files:
+                self.ui.pb_queue.clear()
+                for fbx in fbx_files:
+                    row = self.ui.pb_queue.rowCount()
+                    filename = os.path.basename(fbx)
+                    filepath = os.path.dirname(fbx)
+                    self.ui.pb_queue.insertRow(row)
+                    self.ui.pb_queue.setItem(row, 0, QtWidgets.QTableWidgetItem(filename))
+                    # self
 
-                # Check frame range number and start processing.
-                if type(start_time) in [float, int] and type(end_time) in [float, int]:
-                    logger.debug('The frame numbers are valid.')
-                    if start_time and end_time:
-                        pprint.pprint('exporting....')
-                        original_fbx = original_fbx.replace('\\', '/')
-                        output = output.replace('\\', '/')
-                        # TODO: This needs to move the new animation to frame 1001... somehow.
-                        command = 'file -import -type \\"FBX\\" -ignoreVersion -ra true -mergeNamespacesOnClash false ' \
-                                  '-rpr \\"%s\\" -options \\"fbx\\" -pr -importFrameRate true -importTimeRange ' \
-                                  '"override" \\"%s\\";playbackOptions -min %f -max %f;' \
-                                  'FBXExportSplitAnimationIntoTakes -v \\"%s\\" %f %f;FBXExport -f \\"%s\\";' % \
-                                  (name, original_fbx, start_time, end_time, edit_name, start_time, end_time, output)
-                        result = subprocess.call('%s -command "%s"' % (self.mayabatch, command))
-                        print('RESULT: %s' % result)
+    def run_playblast(self):
+        # This will launch the Maya Standalone Engine and run the playblaster.
+        # TODO: Testing on this remote system.
+        test_raw_data = '{"Run": "This info"}'
+        test_json_data = json.dumps(test_raw_data)
+        mayapy_path = self.ui.cfg_mayapy_path.text()
+        skeleton_root = self.ui.cfg_default_root.text()
 
+        pb_count = self.ui.pb_queue.rowCount()
+        pb_list = []
+        if pb_count > 0:
+            for c in range(pb_count - 1):
+                pb_list.append(self.ui.pb_queue.item(c))
+
+        local_path = os.path.dirname(sys.argv[0])
+        run_path = os.path.join(local_path, 'bin/fbx_playblaster.py')
+        if os.path.exists(mayapy_path):
+            run_test = subprocess.Popen('%s %s %s' % (mayapy_path, run_path, test_json_data))
+
+    def get_folder_file(self, field=None, type=None, ext=None):
+        """
+        This will return either a folder or a file depending on the type
+        :param field: This takes the prefix that defines a particular tool tab to know where to return the path
+        :param type: This takes in a boolean to determine whether to use folder or file type
+        :return:
+        """
+        if field:
+            if type:
+                browse = QtWidgets.QFileDialog.getExistingDirectory(caption='Select Folder', dir=field.text())
+                if browse:
+                    field.setText(browse)
             else:
-                pprint.pprint('The FBX is non-existent.')
-        else:
-            pprint.pprint('The FBX is non-existent or is the wrong file type.')
+                browse = QtWidgets.QFileDialog.getOpenFileName(caption='Select File',
+                                                               dir=os.path.dirname(field.text()),
+                                                               filter=ext)[0]
+                if browse:
+                    field.setText(browse)
+
+    def update_saved_settings(self):
+        """
+        The settings that are saved after the window is closed.  These consist of fields and form data that a user micht
+        prefer to remain consistent whenever the tool is used. This includes window position and size, and each of the
+        various settings for a given tool.
+        The Configuration Data is always read directly from the Config file and is not saved on the system.
+        :return:
+        """
+        self.settings.setValue('pb_proc_batch', self.ui.pb_batch_btn.isChecked())
+        self.settings.setValue('pb_proc_file', self.ui.pb_file_btn.isChecked())
+        self.settings.setValue('pb_path', self.ui.pb_folder_file.text())
+        self.settings.setValue('pb_origin_angle', self.ui.pb_origin_angle.value())
+        self.settings.setValue('ex_proc_batch', self.ui.ex_batch_btn.isChecked())
+        self.settings.setValue('ex_proc_file', self.ui.ex_file_btn.isChecked())
+        self.settings.setValue('ex_path', self.ui.ex_folder_file.text())
+        self.settings.setValue('tabs', self.ui.toolboxes.currentIndex())
+        self.settings.setValue('geometry', self.saveGeometry())
+
+        self.saved_pb_proc_batch = self.ui.pb_batch_btn.isChecked()
+        self.saved_pb_proc_file = self.ui.pb_file_btn.isChecked()
+        self.saved_pb_path = self.ui.pb_folder_file.text()
+        self.saved_ex_proc_batch = self.ui.ex_batch_btn.isChecked()
+        self.saved_ex_proc_file = self.ui.ex_file_btn.isChecked()
+        self.saved_ex_path = self.ui.ex_folder_file.text()
+        self.saved_pb_origin_angle = self.ui.pb_origin_angle.value()
+
+    def closeEvent(self, event):
+        self.update_saved_settings()
 
 
 if __name__ == '__main__':
-    test = devils_roto()
-    o_path = 'Q:/TLR/TLR100/Footage/mocap/06122020/TLR100_006_010/fbx_raw_exports'
-    original_fbx = os.path.join(o_path, 'Grant_Red-002#Eric.fbx')
-    output_name = 'TLR100_006_010_redGrant_take_002'
-    test.export_edit(start_time=144, end_time=351, original_fbx=original_fbx, edit_name=output_name)
+    # test = devils_roto()
+    o_path = 'C:/Users/sleep/OneDrive/Documents/Scripts/Python/Utilities/FBX_Editor/raw_data/output/'
+    original_fbx = os.path.join(o_path, 'Cut_a_Fart.fbx')
+    output_name = 'Cut_a_Fart'
+    # test.export_edit(start_time=144, end_time=351, original_fbx=original_fbx, edit_name=output_name)
+
+    # -------------------------------------------------------------------
+    # Test Getting the First Frame
+    # -------------------------------------------------------------------
+    # cmds.file(new=True)
+    # cmds.loadPlugin('fbxmaya')
+    # cmds.file(original_fbx, i=True)
+    # cmds.select(default_root_name, r=True)
+    # dr = devils_roto()
+    # dr.get_first_frame()
+
+    os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+    app = QtWidgets.QApplication.instance()
+    if app is None:
+        app = QtWidgets.QApplication(sys.argv)
+    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+    # app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
+    app.setOrganizationName('AdamBenson')
+    app.setOrganizationDomain('adamdbenson.com')
+    app.setApplicationName('DevilsRoto')
+    splash_pix = QtGui.QPixmap('ui/resources/devils_roto_logo.png')
+    splash = QtWidgets.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
+    splash.setMask(splash_pix.mask())
+    splash.show()
+    app.processEvents()
+    window = devils_roto_ui()
+    window.show()
+    splash.finish(window)
+    sys.exit(app.exec_())

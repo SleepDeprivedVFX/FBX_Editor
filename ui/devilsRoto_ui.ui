@@ -1,0 +1,818 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DevilsRotoscope</class>
+ <widget class="QWidget" name="DevilsRotoscope">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>741</width>
+    <height>558</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Devil's Rotoscope</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(100, 100, 100);
+color: rgb(230, 230, 230);</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_4">
+   <item>
+    <widget class="QLabel" name="Title">
+     <property name="styleSheet">
+      <string notr="true">font: 22pt &quot;Tempus Sans ITC&quot;;
+color: rgb(220, 220, 220);</string>
+     </property>
+     <property name="text">
+      <string>Devil's Rotoscope Mocap Tools</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="toolboxes">
+     <property name="styleSheet">
+      <string notr="true">QTabBar::tab {
+     border: 2px solid #C4C4C3;
+     border-bottom-color: #C2C7CB;
+     border-top-left-radius: 6px;
+     border-top-right-radius: 6px;
+     min-width: 8ex;
+     padding: 2px;
+ }
+QTabWidget {
+	border: 2px;
+}</string>
+     </property>
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
+     <property name="documentMode">
+      <bool>false</bool>
+     </property>
+     <property name="tabBarAutoHide">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="Playblaster">
+      <attribute name="title">
+       <string>Playblaster</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#040404;&quot;&gt;Playblaster&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#040404;&quot;&gt;The Playblaster puts out movie files of the FBX raw data that comes in from the MoCap Session.  It can be used in batch mode, or on a single FBX file.  If the stage orientation is known, this can be put into the system to adjust the forward direction of the Z Axis.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="process_grp">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Process Type&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Batch&lt;/span&gt;&lt;span style=&quot; color:#080808;&quot;&gt; mode sets the tool to search through a folder structure and return all viable files.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;File&lt;/span&gt;&lt;span style=&quot; color:#080808;&quot;&gt; mode sets the tool to process a specific file individually.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="title">
+          <string>Process Type</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QRadioButton" name="pb_batch_btn">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Batch Processing&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;This mode runs the tool on an entire folder structure chosen below.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Batch</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="pb_file_btn">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;File Processing&lt;/span&gt;&lt;/p&gt;&lt;p&gt;This mode processes a single file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>File</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="pb_folder_file_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Folder / File&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;When the &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Batch&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, this field takes a folder as input.  When &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;File&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, then the field requires an existing file as its input.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Folder / File</string>
+           </property>
+           <property name="buddy">
+            <cstring>pb_browse_btn</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="pb_folder_file">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Folder / File&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;When the &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Batch&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, this field takes a folder as input.  When &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;File&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, then the field requires an existing file as its input.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_browse_btn">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Folder / File&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;When the &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Batch&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, this field takes a folder as input.  When &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;File&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, then the field requires an existing file as its input.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Browse...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLabel" name="pb_origin_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Stage Origin Angle&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#090909;&quot;&gt;This will be the compass bearing measured on set. Use a compass during capture sessions to get the bearing for the Z Axis. If none is found or entered, zero is assumed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="toolTipDuration">
+            <number>-1</number>
+           </property>
+           <property name="text">
+            <string>Stage Origin Angle (in degrees)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="pb_origin_angle">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Stage Origin Angle&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;This will be the compass bearing measured on set. Use a compass during capture sessions to get the bearing for the Z Axis. If none is found or entered, zero is assumed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_10">
+         <item>
+          <spacer name="horizontalSpacer_8">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_queue_btn">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#060606;&quot;&gt;Load Queue&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#060606;&quot;&gt;This button will force an update of the selected folder or file into the Queue below&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Load Queue</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="pb_queue_label">
+           <property name="text">
+            <string>Playblast Queue</string>
+           </property>
+           <property name="buddy">
+            <cstring>pb_queue_btn</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="pb_queue">
+           <property name="styleSheet">
+            <string notr="true">QHeaderView::section{
+	
+	background-color: rgb(97, 97, 97);
+}
+QTableView::item{
+	border: 0px;
+	padding: 5px;
+}</string>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <attribute name="horizontalHeaderStretchLastSection">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderStretchLastSection">
+            <bool>true</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>Filename</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Thumbnail</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Progress</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_cancel_btn">
+           <property name="text">
+            <string>Cancel</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_run_btn">
+           <property name="text">
+            <string>Run Playblasts</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="exporter">
+      <attribute name="title">
+       <string>Exporter</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#040404;&quot;&gt;Exporter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#040404;&quot;&gt;The Exporter uses human generated data to automatically export edited clips into their respective shots within the system.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QGroupBox" name="process_grp_2">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Process Type&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Batch&lt;/span&gt;&lt;span style=&quot; color:#080808;&quot;&gt; mode sets the tool to search through a folder structure and return all viable files.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;File&lt;/span&gt;&lt;span style=&quot; color:#080808;&quot;&gt; mode sets the tool to process a specific file individually.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="title">
+          <string>Process Type</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QRadioButton" name="ex_batch_btn">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Batch Processing&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;This mode runs the tool on an entire folder structure chosen below.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Batch</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="ex_file_btn">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;File Processing&lt;/span&gt;&lt;/p&gt;&lt;p&gt;This mode processes a single file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>File</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QLabel" name="ex_folder_file_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Folder / File&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;When the &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Batch&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, this field takes a folder as input.  When &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;File&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, then the field requires an existing file as its input.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Folder / File</string>
+           </property>
+           <property name="buddy">
+            <cstring>ex_browse_btn</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="ex_folder_file">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Folder / File&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;When the &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Batch&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, this field takes a folder as input.  When &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;File&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, then the field requires an existing file as its input.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="ex_browse_btn">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Folder / File&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;When the &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Batch&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, this field takes a folder as input.  When &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Process Type&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt; is set to &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;File&lt;/span&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;, then the field requires an existing file as its input.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Browse...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_11">
+         <item>
+          <spacer name="horizontalSpacer_9">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="ex_queue_btn">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#060606;&quot;&gt;Load Queue&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#060606;&quot;&gt;This button will force an update of the selected folder or file into the Queue below&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Load Queue</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="ex_export_table">
+         <property name="styleSheet">
+          <string notr="true">QHeaderView::section{
+	
+	background-color: rgb(97, 97, 97);
+}
+QTableView::item{
+	border: 0px;
+	padding: 5px;
+}</string>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <row>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </row>
+         <column>
+          <property name="text">
+           <string>Original File</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Start Frame</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>New Column</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>First Frame Number</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Show</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Episode</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Shot Number</string>
+          </property>
+         </column>
+         <item row="0" column="0">
+          <property name="text">
+           <string>RTe</string>
+          </property>
+         </item>
+         <item row="0" column="1">
+          <property name="text">
+           <string>sdfs</string>
+          </property>
+         </item>
+         <item row="0" column="2">
+          <property name="text">
+           <string>sdf</string>
+          </property>
+         </item>
+         <item row="0" column="3">
+          <property name="text">
+           <string>sdf</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_9">
+         <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="ex_cancel_btn">
+           <property name="text">
+            <string>Cancel</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="ex_run_btn">
+           <property name="text">
+            <string>Export</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="config">
+      <attribute name="title">
+       <string>Config</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Config&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;Configure the settings and variables of the tool. This can also be done in the config file.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QGroupBox" name="cfg_maya">
+         <property name="title">
+          <string>Maya</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item>
+             <widget class="QLabel" name="cfg_maya_batch_path_label">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Maya Batch Path&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;The desired path to the mayabatch executable. If this file cannot be found, the system will search for a suitable replacement within the system.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Maya Batch Path</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="cfg_maya_batch_path">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Maya Batch Path&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;The desired path to the mayabatch executable. If this file cannot be found, the system will search for a suitable replacement within the system.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="cfg_mayabatch_btn">
+              <property name="text">
+               <string>Browse...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <item>
+             <widget class="QLabel" name="cfg_mayapy_path_label">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;MayaPy Path&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;The desired path to the mayapy executable. If this file cannot be found, the system will search for a suitable replacement within the system.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>MayaPy Path</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="cfg_mayapy_path">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;MayaPy Path&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;The desired path to the mayapy executable. If this file cannot be found, the system will search for a suitable replacement within the system.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="cfg_mayapy_btn">
+              <property name="text">
+               <string>Browse...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="cfg_logger">
+         <property name="title">
+          <string>Logging</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <widget class="QCheckBox" name="cfg_debug_logging">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Debug Logging&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;Sets the logging system to record deeper debugging information.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="text">
+               <string>Debug Logging</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_13">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_14">
+            <item>
+             <widget class="QLabel" name="cfg_num_days_logging_label">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Number of Days to Keep Logs&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;The log files will cycle over time.  This will limit the number of log files kept on the system.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Number of Days to Keep Logs</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="cfg_num_days_logging">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Number of Days to Keep Logs&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;The log files will cycle over time.  This will limit the number of log files kept on the system.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="specialValueText">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_12">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="cfg_mocap">
+         <property name="title">
+          <string>Mocap</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <item>
+             <widget class="QLabel" name="cfg_default_root_label">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Default Root Name&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;This is usually defined by the MoCap system, and is the name of the Root joint in an FBX.  It is usually &lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Root&lt;/span&gt; or &lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Reference&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Default Root Name</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="cfg_default_root">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Default Root Name&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#080808;&quot;&gt;This is usually defined by the MoCap system, and is the name of the Root joint in an FBX.  It is usually &lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Root&lt;/span&gt; or &lt;span style=&quot; font-weight:600; color:#080808;&quot;&gt;Reference&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_11">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_16">
+         <item>
+          <spacer name="horizontalSpacer_10">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="cfg_cancel_btn">
+           <property name="text">
+            <string>Cancel</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="cfg_run_btn">
+           <property name="text">
+            <string>Save/Update</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
