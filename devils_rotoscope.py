@@ -396,6 +396,10 @@ class devils_roto_ui(QtWidgets.QWidget):
 
         # SETUP ENGINE
         # self.devils_roto = devils_roto()
+        header = self.ui.pb_queue.horizontalHeader()
+        self.ui.pb_queue.setHorizontalHeaderLabels(['X', 'Filename', 'Path'])
+        # TODO: I need to get the resize to contents working.  It does not currently
+        header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
 
     def load_queue(self, path_obj=None, batch=True):
         """
@@ -418,12 +422,25 @@ class devils_roto_ui(QtWidgets.QWidget):
             print('fbx_files: %s' % fbx_files)
             if fbx_files:
                 self.ui.pb_queue.clear()
+                header = self.ui.pb_queue.horizontalHeader()
+                self.ui.pb_queue.setHorizontalHeaderLabels(['X', 'Filename', 'Path'])
+                # TODO: Set the tool tips for the headers
+                #  u"<html><head/><body><p><span style=\" font-weight:600; color:#0c0c0c;\">
+                #  Export (X)</span></p><p><span style=\" color:#0c0c0c;\">When checked, the
+                #  file will be processed.</span></p></body></html>", None));
+
+                # TODO: I need to get the resize to contents working.  It does not currently
+                header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
                 for fbx in fbx_files:
                     row = self.ui.pb_queue.rowCount()
                     filename = os.path.basename(fbx)
                     filepath = os.path.dirname(fbx)
                     self.ui.pb_queue.insertRow(row)
-                    self.ui.pb_queue.setItem(row, 0, QtWidgets.QTableWidgetItem(filename))
+                    checkbox = QtWidgets.QTableWidgetItem()
+                    checkbox.setCheckState(QtCore.Qt.Checked)
+                    self.ui.pb_queue.setItem(row, 0, checkbox)
+                    self.ui.pb_queue.setItem(row, 1, QtWidgets.QTableWidgetItem(filename))
+                    self.ui.pb_queue.setItem(row, 2, QtWidgets.QTableWidgetItem(filepath))
                     # self
 
     def run_playblast(self):

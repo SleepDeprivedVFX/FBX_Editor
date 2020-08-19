@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'devilsRoto_uirfFKAu.ui'
+## Form generated from reading UI file 'devilsRoto_uijqHJOC.ui'
 ##
-## Created by: Qt User Interface Compiler version 5.14.1
+## Created by: Qt User Interface Compiler version 5.15.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
-    QRect, QSize, QUrl, Qt)
+from PySide2.QtCore import (QCoreApplication, QDate, QDateTime, QMetaObject,
+    QObject, QPoint, QRect, QSize, QTime, QUrl, Qt)
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
-    QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
-    QRadialGradient)
+    QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter,
+    QPixmap, QRadialGradient)
 from PySide2.QtWidgets import *
 
 
 class Ui_DevilsRotoscope(object):
     def setupUi(self, DevilsRotoscope):
-        if DevilsRotoscope.objectName():
+        if not DevilsRotoscope.objectName():
             DevilsRotoscope.setObjectName(u"DevilsRotoscope")
         DevilsRotoscope.resize(741, 558)
         DevilsRotoscope.setStyleSheet(u"background-color: rgb(100, 100, 100);\n"
@@ -478,7 +478,7 @@ class Ui_DevilsRotoscope(object):
 
         self.retranslateUi(DevilsRotoscope)
 
-        self.toolboxes.setCurrentIndex(2)
+        self.toolboxes.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(DevilsRotoscope)
@@ -523,11 +523,20 @@ class Ui_DevilsRotoscope(object):
         self.pb_queue_btn.setText(QCoreApplication.translate("DevilsRotoscope", u"Load Queue", None))
         self.pb_queue_label.setText(QCoreApplication.translate("DevilsRotoscope", u"Playblast Queue", None))
         ___qtablewidgetitem = self.pb_queue.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("DevilsRotoscope", u"Filename", None));
+        ___qtablewidgetitem.setText(QCoreApplication.translate("DevilsRotoscope", u"X", None));
+#if QT_CONFIG(tooltip)
+        ___qtablewidgetitem.setToolTip(QCoreApplication.translate("DevilsRotoscope", u"<html><head/><body><p><span style=\" font-weight:600; color:#0c0c0c;\">Export (X)</span></p><p><span style=\" color:#0c0c0c;\">When checked, the file will be processed.</span></p></body></html>", None));
+#endif // QT_CONFIG(tooltip)
         ___qtablewidgetitem1 = self.pb_queue.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("DevilsRotoscope", u"Thumbnail", None));
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("DevilsRotoscope", u"Filename", None));
+#if QT_CONFIG(tooltip)
+        ___qtablewidgetitem1.setToolTip(QCoreApplication.translate("DevilsRotoscope", u"<html><head/><body><p><span style=\" font-weight:600; color:#0c0c0c;\">Filename</span></p><p><span style=\" color:#0c0c0c;\">Name of the file to be processed.</span></p></body></html>", None));
+#endif // QT_CONFIG(tooltip)
         ___qtablewidgetitem2 = self.pb_queue.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("DevilsRotoscope", u"Progress", None));
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("DevilsRotoscope", u"Path", None));
+#if QT_CONFIG(tooltip)
+        ___qtablewidgetitem2.setToolTip(QCoreApplication.translate("DevilsRotoscope", u"<html><head/><body><p><span style=\" font-weight:600; color:#0c0c0c;\">Path</span></p><p><span style=\" color:#0c0c0c;\">The Path of the original file.</span></p></body></html>", None));
+#endif // QT_CONFIG(tooltip)
         self.pb_cancel_btn.setText(QCoreApplication.translate("DevilsRotoscope", u"Cancel", None))
         self.pb_run_btn.setText(QCoreApplication.translate("DevilsRotoscope", u"Run Playblasts", None))
         self.toolboxes.setTabText(self.toolboxes.indexOf(self.Playblaster), QCoreApplication.translate("DevilsRotoscope", u"Playblaster", None))
@@ -563,6 +572,9 @@ class Ui_DevilsRotoscope(object):
         self.ex_queue_btn.setText(QCoreApplication.translate("DevilsRotoscope", u"Load Queue", None))
         ___qtablewidgetitem3 = self.ex_export_table.horizontalHeaderItem(0)
         ___qtablewidgetitem3.setText(QCoreApplication.translate("DevilsRotoscope", u"Original File", None));
+#if QT_CONFIG(tooltip)
+        ___qtablewidgetitem3.setToolTip(QCoreApplication.translate("DevilsRotoscope", u"<html><head/><body><p><span style=\" font-weight:600; color:#0c0c0c;\">Original File</span></p><p><span style=\" color:#0c0c0c;\">The file to be exported.</span></p></body></html>", None));
+#endif // QT_CONFIG(tooltip)
         ___qtablewidgetitem4 = self.ex_export_table.horizontalHeaderItem(1)
         ___qtablewidgetitem4.setText(QCoreApplication.translate("DevilsRotoscope", u"Start Frame", None));
         ___qtablewidgetitem5 = self.ex_export_table.horizontalHeaderItem(2)

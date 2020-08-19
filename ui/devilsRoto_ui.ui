@@ -45,7 +45,7 @@ QTabWidget {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>false</bool>
@@ -268,17 +268,26 @@ QTableView::item{
            </attribute>
            <column>
             <property name="text">
+             <string>X</string>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Export (X)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;When checked, the file will be processed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
              <string>Filename</string>
             </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Thumbnail</string>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Filename&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;Name of the file to be processed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </column>
            <column>
             <property name="text">
-             <string>Progress</string>
+             <string>Path</string>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Path&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;The Path of the original file.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </column>
           </widget>
@@ -484,6 +493,9 @@ QTableView::item{
          <column>
           <property name="text">
            <string>Original File</string>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0c0c0c;&quot;&gt;Original File&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#0c0c0c;&quot;&gt;The file to be exported.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </column>
          <column>
