@@ -462,17 +462,22 @@ class devils_roto_ui(QtWidgets.QWidget):
         test_json_data = json.dumps(test_raw_data)
         mayapy_path = self.ui.cfg_mayapy_path.text()
         skeleton_root = self.ui.cfg_default_root.text()
+        angle = self.ui.pb_origin_angle.value()
 
         pb_count = self.ui.pb_queue.rowCount()
-        pb_list = []
+        pb_list = {}
         if pb_count > 0:
             for c in range(pb_count - 1):
-                pb_list.append(self.ui.pb_queue.item(c))
+                pb_list[self.ui.pb_queue.item(c, 1).text()] = self.ui.pb_queue.item(c, 2).text()
 
+        print('pb_list: %s' % pb_list)
+        print('skeleton_root: %s' % skeleton_root)
+        data_raw = '{"skeleton_root": "%s", "data": "%s", "angle": "%s"}' % (skeleton_root, pb_list, angle)
+        data = json.dumps(data_raw)
         local_path = os.path.dirname(sys.argv[0])
         run_path = os.path.join(local_path, 'bin/fbx_playblaster.py')
         if os.path.exists(mayapy_path):
-            run_test = subprocess.Popen('%s %s %s' % (mayapy_path, run_path, test_json_data))
+            run_test = subprocess.Popen('%s %s %s' % (mayapy_path, run_path, data))
 
     def get_folder_file(self, field=None, type=None, ext=None):
         """
