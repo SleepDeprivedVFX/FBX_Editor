@@ -412,16 +412,27 @@ class devils_roto_ui(QtWidgets.QWidget):
             path = path_obj.text()
             if os.path.exists(path):
                 if batch:
+                    if os.path.isfile(path):
+                        path = os.path.dirname(path)
+                        self.update_folder_file(field=path_obj, string=path)
                     all_files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
                     for f in all_files:
                         if f.endswith('.fbx'):
                             fbx_files.append(os.path.join(path, f))
                 else:
+                    if not os.path.isfile(path):
+                        print('Path_obj: %s' % path_obj)
+                        print('batch: %s' % batch)
+                        self.get_folder_file(field=path_obj, type=batch, ext='FBX(*.fbx)')
+                        path = path_obj.text()
                     if path.endswith('.fbx'):
                         fbx_files.append(path)
+                    else:
+                        print('Could not get file object')
             print('fbx_files: %s' % fbx_files)
             if fbx_files:
                 self.ui.pb_queue.clear()
+                self.ui.pb_queue.setRowCount(0)
                 header = self.ui.pb_queue.horizontalHeader()
                 self.ui.pb_queue.setHorizontalHeaderLabels(['X', 'Filename', 'Path'])
                 # TODO: Set the tool tips for the headers
@@ -441,7 +452,8 @@ class devils_roto_ui(QtWidgets.QWidget):
                     self.ui.pb_queue.setItem(row, 0, checkbox)
                     self.ui.pb_queue.setItem(row, 1, QtWidgets.QTableWidgetItem(filename))
                     self.ui.pb_queue.setItem(row, 2, QtWidgets.QTableWidgetItem(filepath))
-                    # self
+                    self.ui.pb_queue.setRowHeight(row, 14)
+                self.ui.pb_queue.insertRow(row + 1)
 
     def run_playblast(self):
         # This will launch the Maya Standalone Engine and run the playblaster.
@@ -480,6 +492,10 @@ class devils_roto_ui(QtWidgets.QWidget):
                                                                filter=ext)[0]
                 if browse:
                     field.setText(browse)
+
+    def update_folder_file(self, field=None, string=None):
+        if field and string:
+            field.setText(string)
 
     def update_saved_settings(self):
         """

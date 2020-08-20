@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'devilsRoto_uijqHJOC.ui'
+## Form generated from reading UI file 'devilsRoto_uiAhCFTU.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.0
 ##
@@ -22,6 +22,7 @@ class Ui_DevilsRotoscope(object):
             DevilsRotoscope.setObjectName(u"DevilsRotoscope")
         DevilsRotoscope.resize(741, 558)
         DevilsRotoscope.setStyleSheet(u"background-color: rgb(100, 100, 100);\n"
+"alternate-background-color: rgb(120, 120, 120);\n"
 "color: rgb(230, 230, 230);")
         self.verticalLayout_4 = QVBoxLayout(DevilsRotoscope)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
@@ -157,14 +158,19 @@ class Ui_DevilsRotoscope(object):
         self.pb_queue.setStyleSheet(u"QHeaderView::section{\n"
 "	\n"
 "	background-color: rgb(97, 97, 97);\n"
+"	alternate-background-color: rgb(112, 112, 112);\n"
 "}\n"
 "QTableView::item{\n"
 "	border: 0px;\n"
 "	padding: 5px;\n"
-"}")
+"}\n"
+"QTableView(\n"
+"	alternate-background-color: rgb(120, 120, 120);\n"
+")")
         self.pb_queue.setAlternatingRowColors(True)
         self.pb_queue.horizontalHeader().setStretchLastSection(True)
         self.pb_queue.verticalHeader().setVisible(False)
+        self.pb_queue.verticalHeader().setCascadingSectionResizes(True)
         self.pb_queue.verticalHeader().setStretchLastSection(True)
 
         self.verticalLayout.addWidget(self.pb_queue)
