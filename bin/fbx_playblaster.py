@@ -186,8 +186,8 @@ class maya_playblaster:
         cmds.setAttr('%s.transparency' % shader, 0.85, 0.85, 0.85)
         plane = cmds.polyPlane(n='_ground_plane', cuv=1, h=10000, w=10000, sh=100, sw=100)
         geo = cmds.ls(type='mesh')
-        # cmds.hyperShade(a=shader)
-        shading_group = 'initialShadingGroup'
+        shading_group = cmds.sets(renderable=True, noSurfaceShader=True, empty=True, name='_ground_checker_mat_SG')
+        cmds.connectAttr((shader + '.outColor'), (shading_group + '.surfaceShader'), f=True)
         cmds.sets(geo, e=True, forceElement=shading_group)
 
         # Get min and max frames
