@@ -41,6 +41,7 @@ class maya_playblaster:
         y_center = scene_bb[4] - ((scene_bb[4] - scene_bb[1]) / 2)
         z_center = scene_bb[5] - ((scene_bb[5] - scene_bb[2]) / 2)
         bb_center = [x_center, y_center, z_center]
+        print('BB Center: %s' % bb_center)
         cmds.xform(piv=[x_center, y_center, z_center])
 
         user_cam_height = cam_height
@@ -70,7 +71,9 @@ class maya_playblaster:
         z_max = scene_bb[5]
         # Get the cube root hypotenuse of the bounding box to calculate the overall scene's widest distance
         cube_diff = math.pow((x_max - x_min), 3) + math.pow((y_max - y_min), 3) + math.pow((z_max - z_min), 3)
+        print('cubic_diff: %s' % cube_diff)
         max_hypotenuse = cube_diff ** (1. / 3.)
+        print('max_hypotenuse: %s' % max_hypotenuse)
         # Cut the width in half to create a 90 degree angle
         res_width = float(res_w)
         res_height = float(res_h)
@@ -83,12 +86,16 @@ class maya_playblaster:
         # Get the horizontal aperture. Only the inch aperture is accessible, so mm aperture and field of view
         # must be calculated from that
         horizontalApertureInch = cmds.getAttr('%s.horizontalFilmAperture' % cam[1])
+        print('horz aperature: %s' % horizontalApertureInch)
         # convert to mm
         horizontalAperture_mm = 2.54 * horizontalApertureInch * 10
+        print('horz app mm: %s' % horizontalAperture_mm)
         # Get focal length
         focalLength = cmds.getAttr('%s.focalLength' % cam[1])
+        print('focal length: %s' % focalLength)
         # Calculate FOV from horizontal aperture and focal length
         fov = math.degrees(2 * math.atan(horizontalAperture_mm / (focalLength * 2)))
+        print('fov: %s' % fov)
         # Cut the FOV in half to get angle of right angle.
         half_angle = fov / 2
         # Calculate the distance for the camera
@@ -99,6 +106,7 @@ class maya_playblaster:
         cmds.setAttr('%s.tz' % cam[0], distance)
         # Get the new camera position
         new_cam_pos = cmds.xform(q=True, t=True, ws=True)
+        print('new_cam_pos: %s' % new_cam_pos)
 
         cam_height = (new_cam_pos[1] - bb_center[1])
 
