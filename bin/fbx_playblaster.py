@@ -1,7 +1,6 @@
 import maya.standalone
 maya.standalone.initialize(name='python')
 from maya import cmds, mel
-import pymel as pm
 import os
 import pprint
 import math
@@ -192,10 +191,16 @@ class maya_playblaster:
         # Get min and max frames
         cmds.select(selected[0], r=True)
         cmds.select(hi=True)
-        mel.eval('setPlaybackRangeToMinMax;')
 
-        mel.eval('setSceneTimecodeVisibility(true);')
-        mel.eval('setCurrentFrameVisibility(true);')
+        # mel.eval('setPlaybackRangeToMinMax;')
+        _time = cmds.keyframe(q=True, time=(-999999999, 999999999))
+        sorted_time = sorted(_time)
+        min_time = sorted_time[0]
+        max_time = sorted_time[-1]
+        print('Min: %s' % min_time)
+        print('Max: %s' % max_time)
+        # mel.eval('setSceneTimecodeVisibility(true);')
+        # mel.eval('setCurrentFrameVisibility(true);')
 
         # Save the file
         base_name = os.path.splitext(fbx_filename)[0]
@@ -207,8 +212,8 @@ class maya_playblaster:
         # Create a playblast
         # TODO: Check for MOV install and possibly load the plugin
 
-        save_data = cmds.playblast(format='qt', filename=scene_name, sqt=0, cc=True, v=True, os=True, fp=4, p=100, qlt=80,
-                                   h=1080, w=1920)
+        save_data = cmds.playblast(format='qt', filename=scene_name, sqt=0, cc=True, v=True, os=True, fp=4, p=100,
+                                   qlt=80, h=1080, w=1920, fo=True)
         print(save_data)
 
     def fbx_to_playblast(self):
@@ -260,7 +265,7 @@ app = maya_playblaster()
 for _file, _path in dict(file_list).items():
     app.batch_process_fbx_playblasts(_path=os.path.join(_path, _file), _root=skeleton_root)
 
-
+maya.standalone.uninitialize()
 # if __name__ == '__main__':
 #     start_path = 'C:/Users/sleep/OneDrive/Documents/Scripts/Python/Utilities/FBX_Editor/raw_data'
 #     root = 'Reference'
