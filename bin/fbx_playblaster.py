@@ -17,6 +17,7 @@ class maya_playblaster:
         # Disable all cameras as renderable
         # and store the original states
         cams = cmds.ls(type='camera')
+        print('cams: %s' % cams)
         states = {}
         for cam in cams:
             states[cam] = cmds.getAttr(cam + '.rnd')
@@ -52,6 +53,7 @@ class maya_playblaster:
         # Set the renderable camera
         self.solo_renderable(cam[0])
         active_panel = cmds.getPanel(wf=True)
+        print('active_panel: %s' % active_panel)
         # cmds.lookThru(cam)
         # cmds.viewFit()
         cmds.modelEditor(active_panel, e=True, displayTextures=True)
@@ -197,16 +199,19 @@ class maya_playblaster:
         sorted_time = sorted(_time)
         min_time = sorted_time[0]
         max_time = sorted_time[-1]
-        print('Min: %s' % min_time)
-        print('Max: %s' % max_time)
+
+        cmds.playbackOptions(ast=min_time, aet=max_time, min=min_time, max=max_time)
+
         # mel.eval('setSceneTimecodeVisibility(true);')
         # mel.eval('setCurrentFrameVisibility(true);')
 
         # Save the file
         base_name = os.path.splitext(fbx_filename)[0]
         scene_name = '%s_fbx_playblast' % base_name
+        print('scene_name: %s' % scene_name)
         scene_name = os.path.join(_path, scene_name)
-        cmds.file(rename=scene_name)
+        save_name = '%s.ma' % scene_name
+        cmds.file(rename=save_name)
         cmds.file(save=True, type='mayaAscii')
 
         # Create a playblast
