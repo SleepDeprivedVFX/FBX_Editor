@@ -7,6 +7,7 @@ import math
 import sys
 import json
 import ast
+from PySide2 import QtCore, QtWidgets, QtGui, QtUiTools
 
 
 class maya_playblaster:
@@ -62,6 +63,7 @@ class maya_playblaster:
 
         # Get the position of the new camera after placement
         cam_pos = cmds.xform(q=True, ws=True, t=True)
+        print('cam_pos original: %s' % cam_pos)
         # Separate out the mins and maxs of the bounding box for triangulation
         x_min = scene_bb[0]
         x_max = scene_bb[3]
@@ -100,7 +102,12 @@ class maya_playblaster:
         half_angle = fov / 2
         # Calculate the distance for the camera
         angle_tan = math.tan(half_angle)
+        print('Camera Distance math ---------------------------------------------')
+        print('cam_pos[2]: %s' % cam_pos[2])
+        print('half_width: %s' % half_width)
+        print('angle_tan: %s' % angle_tan)
         distance = cam_pos[2] - (half_width / angle_tan)
+        print('deistance - cam_pos[2] - (half_width / angle_tan) = %s' % distance)
         # Set the new camera distance and height
         cmds.setAttr('%s.ty' % cam[0], cam_height)
         cmds.setAttr('%s.tz' % cam[0], distance)
@@ -246,6 +253,8 @@ class maya_playblaster:
                 if _path.endswith('.fbx'):
                     print('Building Playblast...', _path)
                     self.build_maya_scene(_path=os.path.dirname(_path), _fbx=os.path.basename(_path), root=_root)
+
+    # def playblast_queue(self, QtWidgets
 
 
 # Get the system arguments passed from the main engine

@@ -15,7 +15,7 @@ import subprocess
 import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
-from PySide2 import QtWidgets, QtCore, QtGui
+from PySide2 import QtWidgets, QtCore, QtGui, QtUiTools
 from ui import ui_devilsRoto_ui as dr
 
 # Import tool bin
