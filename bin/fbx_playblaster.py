@@ -34,6 +34,53 @@ class maya_playblaster:
             for cam, state in states.items():
                 cmds.setAttr(cam + '.rnd', state)
 
+    def build_geo_bones(self):
+        # Create geo bones from joints
+        print('Building geo boxes...')
+
+        joints = cmds.ls(type='joint')
+
+        joint_data = {}
+        bones = []
+        for joint in joints:
+            children = cmds.listRelatives(joint, c=True)
+            if children and len(children) >= 1:
+                joint_data[joint] = {
+                    'children': children
+                }
+
+        # This will need a way to determine varying joint hierarchies!  Spine to arms to legs, et cetera.
+        for joint, data in joint_data.items():
+            j_children = data['children']
+            j_radius = cmds.getAttr('%s.radius' % joint)
+            for child in j_children:
+                j_pos = cmds.xform(joint, q=True, t=True, ws=True)
+                c_pos = cmds.xform(child, q=True, t=True, ws=True)
+                half_rad = j_radius / 2
+
+                # Find the distance to the next joint
+                distance = math.sqrt(
+                    ((c_pos[0] - j_pos[0]) ** 2) + ((c_pos[1] - j_pos[1]) ** 2) + ((c_pos[2] - j_pos[2]) ** 2))
+                height = distance
+
+                # Build cubes
+                new_cube = cmds.polyCube(h=half_rad, d=half_rad, w=height, n='%s_bone' % joint)
+                bones.append(new_cube)
+                new_piv_dist = 0.0 - (height / 2.0)
+                cmds.xform(new_cube, piv=(new_piv_dist, 0.0, 0.0))
+
+                # Properly align and attach cubes to bones
+                point = cmds.pointConstraint(joint, new_cube, mo=False)
+                aim = cmds.aimConstraint(child, new_cube)
+                cmds.delete(point)
+                cmds.delete(aim)
+                cmds.parentConstraint(joint, new_cube, mo=True)
+        cmds.select(clear=True)
+        for bone in bones:
+            cmds.select(bone[0], add=True)
+        group = cmds.group(n='_fbx_geo_bones')
+        return group
+
     def build_camera(self, bb=None, cam_height=None, res_w=1920, res_h=1080):
         # Get the set/scene size from the bounding box
         scene_bb = bb
@@ -166,10 +213,14 @@ class maya_playblaster:
             return False
         selected = cmds.ls(sl=True)
         if selected:
+            # build GEO Bones
+            bones = self.build_geo_bones()
+            cmds.select(bones, add=True)
             # The FBX skeleton is found and selected!
             # Get the Bounding Box information
             bb = cmds.xform(bb=True, q=True)
             print('Bounding Box: %s' % bb)
+            cmds.select(selected, r=True)
         else:
             print('Object not selected, set a default.  This should never work.', selected)
             bb = [-1.0, 0.0, -1.0, 1.0, 1.0, 1.0]
