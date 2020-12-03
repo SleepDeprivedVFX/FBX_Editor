@@ -242,7 +242,7 @@ class devils_roto_ui(QtWidgets.QWidget):
                                                                                              angle, mayapy_path)
         data = json.dumps(data_raw)
         local_path = os.path.dirname(sys.argv[0])
-        run_path = os.path.join(local_path, 'bin/fbx_playblaster.py')
+        run_path = os.path.join(local_path, 'fbx_playblaster.py')
         if os.path.exists(mayapy_path):
             run_test = subprocess.Popen('%s %s %s' % (mayapy_path, run_path, data))
             print(run_test)

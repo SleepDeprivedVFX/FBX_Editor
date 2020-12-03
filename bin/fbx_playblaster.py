@@ -1,13 +1,13 @@
 import maya.standalone
 maya.standalone.initialize(name='python')
-from maya import cmds, mel
+from maya import cmds
 import os
-import pprint
 import math
 import sys
 import json
 import ast
-from PySide2 import QtCore, QtWidgets, QtGui, QtUiTools
+from PySide2 import QtCore, QtWidgets
+from ui import ui_devilsRoto_pb_queue as popup
 
 
 class maya_playblaster:
@@ -308,6 +308,15 @@ class maya_playblaster:
     # def playblast_queue(self, QtWidgets
 
 
+class queue_popup(QtWidgets.Qwidget):
+    def __init__(self, parent=None, data=None):
+        QtWidgets.QWidget.__init__(self, parent)
+
+        self.ui = popup.Ui_Form()
+        self.ui.setupUi(self)
+        self.data = None
+
+
 # Get the system arguments passed from the main engine
 if len(sys.argv) > 1:
     data = sys.argv
@@ -329,14 +338,21 @@ if data and len(data) > 1:
     if 'bin' in mayapy:
         maya_root = mayapy.split('bin')[0]
 
-# Import the maya plugins
-fbx_plugin_path = os.path.join(maya_root, "plug-ins/fbx/plug-ins/fbxmaya.mll")
-cmds.loadPlugin(fbx_plugin_path)
+    # Import the maya plugins
+    fbx_plugin_path = os.path.join(maya_root, "plug-ins/fbx/plug-ins/fbxmaya.mll")
+    cmds.loadPlugin(fbx_plugin_path)
 
-app = maya_playblaster()
+    # app = maya_playblaster()
+    app = QtWidgets.instance()
+    if app is None:
+        app = QtWidgets.QApplication(sys.argv)
+    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+    window = queue_popup()
+    window.show()
 
-for _file, _path in dict(file_list).items():
-    app.batch_process_fbx_playblasts(_path=os.path.join(_path, _file), _root=skeleton_root)
+
+    # for _file, _path in dict(file_list).items():
+    #     app.batch_process_fbx_playblasts(_path=os.path.join(_path, _file), _root=skeleton_root)
 
 maya.standalone.uninitialize()
 # if __name__ == '__main__':
