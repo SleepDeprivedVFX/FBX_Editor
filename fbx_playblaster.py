@@ -310,22 +310,28 @@ class maya_playblaster:
 
 class queue_popup(QtWidgets.QWidget):
     def __init__(self, parent=None):
+        print('queue_popup activated.')
         QtWidgets.QWidget.__init__(self, parent)
-        self.ui = popup.Ui_Form()
-        self.ui.setupUi(self)
+        print('test.')
+        self.p_ui = popup.Ui_Form()
+        self.p_ui.setupUi(self)
         self.data = None
+        print('queue_popup end.')
 
 
 # Get the system arguments passed from the main engine
 if len(sys.argv) > 1:
+    print('sys.argv: %s' % sys.argv)
     data = sys.argv
 else:
+    print('No Data - Probable Fail.')
     data = None
 
 if data and len(data) > 1:
     raw_data = json.loads(data[1])
     skeleton_root = raw_data['skeleton_root']
     file_list = ast.literal_eval(raw_data['data'])
+    # file_list = raw_data['data']
     angle = raw_data['angle']
     mayapy = raw_data['mayapy']
     print('skeleton_root: %s' % skeleton_root)
