@@ -309,9 +309,8 @@ class maya_playblaster:
 
 
 class queue_popup(QtWidgets.QWidget):
-    def __init__(self, parent=None, data=None):
+    def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
-
         self.ui = popup.Ui_Form()
         self.ui.setupUi(self)
         self.data = None
@@ -343,14 +342,21 @@ if data and len(data) > 1:
     # Import the maya plugins
     fbx_plugin_path = os.path.join(maya_root, "plug-ins/fbx/plug-ins/fbxmaya.mll")
     cmds.loadPlugin(fbx_plugin_path)
+    print('plugin loaded')
 
-    # app = maya_playblaster()
-    app = QtWidgets.QApplication.instance()
-    if app is None:
-        app = QtWidgets.QApplication(sys.argv)
-    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-    window = queue_popup()
-    window.show()
+# app = maya_playblaster()
+q_app = QtWidgets.QApplication.instance()
+print('App: %s' % q_app)
+print('app loaded')
+if q_app is None:
+    q_app = QtWidgets.QApplication(sys.argv)
+q_app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+print('HI DPI')
+win = queue_popup()
+print('Popup loaded')
+win.show()
+print('Showing')
+sys.exit(q_app.exec_())
 
 
     # for _file, _path in dict(file_list).items():
