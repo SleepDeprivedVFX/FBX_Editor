@@ -244,7 +244,7 @@ class devils_roto_ui(QtWidgets.QWidget):
         local_path = os.path.dirname(sys.argv[0])
         run_path = os.path.join(local_path, 'fbx_playblaster.py')
         if os.path.exists(mayapy_path):
-            run_test = subprocess.call('%s %s %s' % (mayapy_path, run_path, data))
+            run_test = subprocess.Popen('%s %s %s' % (mayapy_path, run_path, data))
             print(run_test)
 
     def get_folder_file(self, field=None, type=None, ext=None):

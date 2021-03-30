@@ -320,6 +320,17 @@ class queue_popup(QtWidgets.QWidget):
 
 
 # Get the system arguments passed from the main engine
+
+# app = maya_playblaster()
+q_app = QtWidgets.QApplication.instance()
+print('App 2: %s' % q_app)
+print('app loaded')
+if q_app is None:
+    print('q_app is None.  Getting sys.argv')
+    q_app = QtWidgets.QApplication(sys.argv)
+# q_app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+q_app.processEvents()
+
 if len(sys.argv) > 1:
     print('sys.argv: %s' % sys.argv)
     data = sys.argv
@@ -350,13 +361,6 @@ if data and len(data) > 1:
     cmds.loadPlugin(fbx_plugin_path)
     print('plugin loaded')
 
-# app = maya_playblaster()
-q_app = QtWidgets.QApplication.instance()
-print('App: %s' % q_app)
-print('app loaded')
-if q_app is None:
-    q_app = QtWidgets.QApplication(sys.argv)
-q_app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 print('HI DPI')
 win = queue_popup()
 print('Popup loaded')
